@@ -10,48 +10,10 @@ import { Users, BookOpen, Calendar, Image, Award, Plus, Search } from "lucide-re
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 
-export default function TeacherDashboard() {
+export default function TeacherDashboard({ students, recentHomework, families }) {
     const teacherName = "先生";
-    const totalStudents = 8;
-    const totalFamilies = 3;
-    
-    const recentHomework = [
-        { 
-            id: 1, 
-            studentName: "ゆうき", 
-            date: new Date(2025, 1, 24), 
-            status: "new", 
-            avatarColor: "#3B82F6" 
-        },
-        { 
-            id: 2, 
-            studentName: "あきら", 
-            date: new Date(2025, 1, 24), 
-            status: "new", 
-            avatarColor: "#EF4444" 
-        },
-        { 
-            id: 3, 
-            studentName: "まい", 
-            date: new Date(2025, 1, 23), 
-            status: "reviewed", 
-            avatarColor: "#10B981" 
-        }
-    ];
-    
-    const students = [
-        { id: 1, name: "ゆうき", currentStreak: 4, lastSubmission: new Date(2025, 1, 24), avatarColor: "#3B82F6" },
-        { id: 2, name: "あきら", currentStreak: 3, lastSubmission: new Date(2025, 1, 24), avatarColor: "#EF4444" },
-        { id: 3, name: "まい", currentStreak: 7, lastSubmission: new Date(2025, 1, 23), avatarColor: "#10B981" },
-        { id: 4, name: "けんた", currentStreak: 0, lastSubmission: new Date(2025, 1, 21), avatarColor: "#F59E0B" },
-        { id: 5, name: "はるか", currentStreak: 9, lastSubmission: new Date(2025, 1, 24), avatarColor: "#8B5CF6" }
-    ];
-    
-    const families = [
-        { id: 1, name: "たなか家", accessCode: "ABC123", studentCount: 2 },
-        { id: 2, name: "すずき家", accessCode: "DEF456", studentCount: 3 },
-        { id: 3, name: "さとう家", accessCode: "GHI789", studentCount: 3 }
-    ];
+    const totalStudents = students?.length;
+    const totalFamilies = families?.length;
 
     return (
         <AuthenticatedLayout
@@ -77,7 +39,7 @@ export default function TeacherDashboard() {
                         <Card>
                             <CardContent className="p-4 flex flex-col items-center justify-center">
                                 <BookOpen className="h-8 w-8 text-primary mb-2" />
-                                <p className="text-2xl font-bold">{recentHomework.filter(hw => hw.status === "new").length}</p>
+                                <p className="text-2xl font-bold">{recentHomework?.filter(hw => hw.status === "new").length}</p>
                                 <p className="text-sm text-gray-500">新しい宿題</p>
                             </CardContent>
                         </Card>
@@ -92,20 +54,20 @@ export default function TeacherDashboard() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            {recentHomework.length > 0 ? (
+                            {recentHomework?.length > 0 ? (
                                 <div className="space-y-4">
-                                    {recentHomework.map((homework) => (
+                                    {recentHomework?.map((homework) => (
                                         <div key={homework.id} className="flex items-center justify-between border-b pb-3">
                                             <div className="flex items-center gap-3">
                                                 <Avatar>
                                                     <AvatarFallback style={{ backgroundColor: homework.avatarColor }}>
-                                                        {homework.studentName.charAt(0)}
+                                                        {homework.studentName?.charAt(0)}
                                                     </AvatarFallback>
                                                 </Avatar>
                                                 <div>
                                                     <div className="font-medium">{homework.studentName}</div>
                                                     <div className="text-sm text-gray-500">
-                                                        {format(homework.date, 'MM月dd日', { locale: ja })}
+                                                        {homework.homeworkDate}
                                                     </div>
                                                 </div>
                                             </div>
@@ -148,7 +110,7 @@ export default function TeacherDashboard() {
                             <Card>
                                 <CardHeader className="pb-2">
                                     <div className="flex justify-between items-center">
-                                        <CardTitle className="text-lg">生徒 ({students.length})</CardTitle>
+                                        <CardTitle className="text-lg">生徒 ({students?.length})</CardTitle>
                                         <Button size="sm" className="gap-1" asChild>
                                             <a href="/students/create">
                                                 <Plus size={16} /> 追加
@@ -159,7 +121,7 @@ export default function TeacherDashboard() {
                                 <CardContent>
                                     <ScrollArea className="h-72">
                                         <div className="space-y-4">
-                                            {students.map((student) => (
+                                            {students?.map((student) => (
                                                 <div key={student.id} className="flex items-center justify-between border-b pb-3">
                                                     <div className="flex items-center gap-3">
                                                         <Avatar>
@@ -191,7 +153,7 @@ export default function TeacherDashboard() {
                             <Card>
                                 <CardHeader className="pb-2">
                                     <div className="flex justify-between items-center">
-                                        <CardTitle className="text-lg">家族 ({families.length})</CardTitle>
+                                        <CardTitle className="text-lg">家族 ({families?.length})</CardTitle>
                                         <Button size="sm" className="gap-1" asChild>
                                             <a href="/families/create">
                                                 <Plus size={16} /> 追加
@@ -202,7 +164,7 @@ export default function TeacherDashboard() {
                                 <CardContent>
                                     <ScrollArea className="h-72">
                                         <div className="space-y-4">
-                                            {families.map((family) => (
+                                            {families?.map((family) => (
                                                 <div key={family.id} className="flex items-center justify-between border-b pb-3">
                                                     <div>
                                                         <div className="font-medium">{family.name}</div>
