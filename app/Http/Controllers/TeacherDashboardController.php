@@ -17,6 +17,11 @@ class TeacherDashboardController extends Controller
             ->orderBy('homework_date', 'desc')
             ->limit(5)
             ->get();
+        $recentHomework = $recentHomework->map(function ($homework) {
+            $homework->studentName = $homework->student->name;
+            $homework->homeworkDate = $homework->homework_date;
+            return $homework;
+        });
         return Inertia::render('TeacherDashboard', [
             'students' => $students,
             'recentHomework' => $recentHomework,

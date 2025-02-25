@@ -67,7 +67,7 @@ export default function TeacherDashboard({ students, recentHomework, families })
                                                 <div>
                                                     <div className="font-medium">{homework.studentName}</div>
                                                     <div className="text-sm text-gray-500">
-                                                        {homework.homeworkDate}
+                                                        {format(homework.homeworkDate, 'MM月dd日', { locale: ja })}
                                                     </div>
                                                 </div>
                                             </div>
