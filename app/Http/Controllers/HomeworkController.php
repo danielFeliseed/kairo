@@ -21,7 +21,7 @@ class HomeworkController extends Controller
     public function show($id)
     {
         $homework = Homework::findOrFail($id);
-
+        $homework->load(['student', 'feedback']);
         return Inertia::render('Homework/Show', [
             'homework' => $homework,
         ]);
