@@ -198,9 +198,9 @@ export default function TeacherDashboard({ students, recentHomework, families })
                             </a>
                         </Button>
                         <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-1" asChild>
-                            <a href="/homework/search">
+                            <a href="/homework">
                                 <Search size={24} />
-                                <span>検索</span>
+                                <span>宿題</span>
                             </a>
                         </Button>
                     </div>

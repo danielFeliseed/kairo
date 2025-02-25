@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeacherDashboardController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeworkController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -23,6 +24,9 @@ Route::get('/', function () {
 Route::get('/teacher-dashboard', [TeacherDashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('teacher-dashboard');
+
+Route::get('/homework', [HomeworkController::class, 'index'])->name('homework.index');
+Route::get('/homework/{id}', [HomeworkController::class, 'show'])->name('homework.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
