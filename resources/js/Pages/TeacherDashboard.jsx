@@ -39,8 +39,8 @@ export default function TeacherDashboard({ students, recentHomework, families })
                         <Card>
                             <CardContent className="p-4 flex flex-col items-center justify-center">
                                 <BookOpen className="h-8 w-8 text-primary mb-2" />
-                                <p className="text-2xl font-bold">{recentHomework?.filter(hw => hw.status === "new").length}</p>
-                                <p className="text-sm text-gray-500">新しい宿題</p>
+                                <p className="text-2xl font-bold">{recentHomework?.filter(hw => hw.status === "submitted").length}</p>
+                                <p className="text-sm text-gray-500">未確認宿題</p>
                             </CardContent>
                         </Card>
                     </div>
