@@ -13,9 +13,11 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $today = now()->format('Y-m-d');
         $user = Auth::user();
         $streak = Streak::where('student_id', $user->id)->first();
         $latestHomework = Homework::where('student_id', $user->id)->latest()->first();
+        $hasSubmittedToday = $latestHomework && $latestHomework->homework_date->format('Y-m-d') == $today;
         if ($user->role === 'teacher') {
             $teacher = Auth::user();
             $students = $teacher->students;
@@ -43,6 +45,7 @@ class DashboardController extends Controller
                 'currentStreakPercentage' => $streak->getStreakPercentageAttribute(),
                 'latestHomework' => $latestHomework,
                 'latestFeedback' => $latestHomework->getLatestFeedback(),
+                'hasSubmittedToday' => $hasSubmittedToday,
             ]);
         }
     }

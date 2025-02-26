@@ -38,10 +38,10 @@ export default function StudentDashboard({
     currentStreakPercentage,
     latestHomework,
     latestFeedback,
+    hasSubmittedToday,
 }) {
-    const hasTodaysHomework =
-        latestHomework?.homework_date ===
-        new Date().toISOString().split("T")[0];
+    const hasTodaysHomework = hasSubmittedToday;
+    console.log(hasTodaysHomework);
 
     const [capturedImage, setCapturedImage] = useState(null);
     const [isCameraActive, setIsCameraActive] = useState(false);
