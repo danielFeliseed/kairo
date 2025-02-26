@@ -38,6 +38,8 @@ Route::get('/homework', [HomeworkController::class, 'index'])->name('homework.in
 Route::get('/homework/{id}', [HomeworkController::class, 'show'])->name('homework.show');
 Route::post('/homework', [HomeworkController::class, 'store'])->name('homework.store');
 
+Route::get('/homework-history', [HomeworkController::class, 'history'])->name('homework.history');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -20,6 +20,18 @@ class HomeworkController extends Controller
         ]);
     }
 
+    public function history()
+    {
+        $homework = Homework::with(['feedback'])
+            ->where('student_id', Auth::user()->id)
+            ->orderBy('homework_date', 'desc')
+            ->get();
+        return Inertia::render('HomeworkHistory', [
+            'homework' => $homework,
+        ]);
+    }
+    
+
     // In HomeworkController.php
     public function store(Request $request)
     {

@@ -13,11 +13,19 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        \Log::info('Current Time: ' . now());
         $today = now()->format('Y-m-d');
         $user = Auth::user();
         $streak = Streak::where('student_id', $user->id)->first();
         $latestHomework = Homework::where('student_id', $user->id)->latest()->first();
+
+        // Log the values for debugging
+        \Log::info('Latest Homework Date: ' . ($latestHomework ? $latestHomework->homework_date->format('Y-m-d') : 'No Homework'));
+        \Log::info('Today: ' . $today);
+
+        // Ensure the comparison is valid
         $hasSubmittedToday = $latestHomework && $latestHomework->homework_date->format('Y-m-d') == $today;
+
         if ($user->role === 'teacher') {
             $teacher = Auth::user();
             $students = $teacher->students;

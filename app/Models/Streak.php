@@ -53,6 +53,9 @@ class Streak extends Model
             ? $submissionDate 
             : Carbon::parse($submissionDate);
         
+        // Log the submission date for debugging
+        \Log::info('Updating streak for submission date: ' . $submissionDate->format('Y-m-d'));
+
         // Get missed days (if any)
         $missedDays = $this->missed_days ?? [];
         
@@ -61,9 +64,18 @@ class Streak extends Model
             $this->current_streak = 1;
             $this->longest_streak = 1;
         } else {
-            $lastSubmission = $this->last_submission;
+            $lastSubmission = $this->last_submission->startOfDay(); // Use startOfDay()
+            $submissionDate = $submissionDate->startOfDay(); // Ensure submissionDate is also at start of day
+
+            // Log the values for debugging
+            \Log::info('Last Submission Date: ' . $lastSubmission->format('Y-m-d H:i:s'));
+            \Log::info('Submission Date: ' . $submissionDate->format('Y-m-d H:i:s'));
+
             $dayDifference = $submissionDate->diffInDays($lastSubmission);
             
+            // Log the day difference for debugging
+            \Log::info('Day difference: ' . $dayDifference);
+
             if ($dayDifference == 1 || ($dayDifference == 0 && $submissionDate->gt($lastSubmission))) {
                 // Consecutive day submission
                 $this->current_streak += 1;
@@ -88,7 +100,14 @@ class Streak extends Model
         $this->last_submission = $submissionDate;
         $this->missed_days = $missedDays;
         
-        return $this->save();
+        // Log the updated streak values before saving
+        \Log::info('Before saving: Current Streak: ' . $this->current_streak);
+        \Log::info('Before saving: Longest Streak: ' . $this->longest_streak);
+        
+        $saved = $this->save();
+        \Log::info('Save successful: ' . ($saved ? 'true' : 'false'));
+        
+        return $saved;
     }
 
     /**
