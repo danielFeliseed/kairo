@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Homework;
+use App\Models\Streak;
+use App\Models\Feedback;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,6 +14,8 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $streak = Streak::where('student_id', $user->id)->first();
+        $latestHomework = Homework::where('student_id', $user->id)->latest()->first();
         if ($user->role === 'teacher') {
             $teacher = Auth::user();
             $students = $teacher->students;
@@ -33,6 +37,12 @@ class DashboardController extends Controller
         } else {
             return Inertia::render('Dashboard', [
                 'user' => $user,
+                'currentStreak' => $streak->getCurrentStreak(),
+                'longestStreak' => $streak->getLongestStreak(),
+                'lastSubmission' => $streak->getLastSubmission(),
+                'currentStreakPercentage' => $streak->getStreakPercentageAttribute(),
+                'latestHomework' => $latestHomework,
+                'latestFeedback' => $latestHomework->getLatestFeedback(),
             ]);
         }
     }

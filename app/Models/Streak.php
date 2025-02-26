@@ -131,4 +131,39 @@ class Streak extends Model
             })
             ->toArray();
     }
+
+    /**
+     * Get the streak status
+     */
+    public function getStreakStatusAttribute()
+    {
+        if (!$this->last_submission) {
+            return '未提出';
+        }
+
+        $today = Carbon::today();
+        $daysSinceLastSubmission = $today->diffInDays($this->last_submission);  
+
+        if ($daysSinceLastSubmission == 0) {
+            return '今日提出';
+        } elseif ($daysSinceLastSubmission == 1) {
+            return '昨日提出';
+        }
+    }
+
+    public function getCurrentStreak()
+    {
+        return $this->current_streak;
+    }
+
+    public function getLongestStreak()
+    {
+        return $this->longest_streak;
+    }
+
+    public function getLastSubmission()
+    {
+        return $this->last_submission;
+    }
+
 }

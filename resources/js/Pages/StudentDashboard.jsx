@@ -7,22 +7,14 @@ import { CalendarDays, Camera, Book, Award, ArrowRight, MessageSquare } from "lu
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 
-export default function StudentDashboard() {
-    const studentName = "ゆうき"; // Example student name
-    const currentStreak = 4;
-    const longestStreak = 7;
+export default function StudentDashboard({ user, currentStreak, longestStreak, lastSubmission, currentStreakPercentage, latestHomework, latestFeedback }) {
     const hasTodaysHomework = false;
-    const latestFeedback = {
-        date: new Date(2025, 1, 20),
-        message: "とても上手です！カタカナの練習を続けてください。",
-        rating: 4
-    };
 
     return (
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    {studentName}のページ
+                    {user.name}のページ
                 </h2>
             }
         >
@@ -68,7 +60,7 @@ export default function StudentDashboard() {
                                 <span>現在の記録：</span>
                                 <span className="font-bold text-orange-500">{currentStreak}日</span>
                             </div>
-                            <Progress value={currentStreak / longestStreak * 100} className="h-2 mb-2" />
+                            <Progress value={currentStreakPercentage} className="h-2 mb-2" />
                             <div className="flex items-center justify-between text-sm">
                                 <span>一番長い記録：</span>
                                 <span className="font-semibold">{longestStreak}日</span>
@@ -89,7 +81,7 @@ export default function StudentDashboard() {
                                 <div>
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm text-gray-500">
-                                            {format(latestFeedback.date, 'MM月dd日', { locale: ja })}
+                                            {format(latestFeedback.created_at, 'MM月dd日', { locale: ja })}
                                         </span>
                                         <div className="flex">
                                             {[...Array(5)].map((_, i) => (
@@ -99,7 +91,7 @@ export default function StudentDashboard() {
                                             ))}
                                         </div>
                                     </div>
-                                    <p className="text-gray-700">{latestFeedback.message}</p>
+                                    <p className="text-gray-700">{latestFeedback?.feedback_text}</p>
                                 </div>
                             ) : (
                                 <p className="text-center py-3 text-gray-500">まだコメントはありません</p>

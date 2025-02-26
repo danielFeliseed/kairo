@@ -104,6 +104,11 @@ class Homework extends Model
         return $this->status === 'reviewed';
     }
 
+    public function getLatestFeedback()
+    {
+        return $this->feedback()->latest()->first();
+    }
+
     /**
      * Register media collections
      */
