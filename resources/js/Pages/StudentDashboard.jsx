@@ -128,7 +128,9 @@ export default function StudentDashboard({
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(data.image);
         post(route("homework.store"), {
+            image: data.image,
             onSuccess: () => {
                 setIsDialogOpen(false);
                 setCapturedImage(null);

@@ -26,9 +26,9 @@ Route::get('/family/profiles', [FamilyController::class, 'showProfiles'])
 Route::get('/family/login/{student}', [FamilyController::class, 'loginAsStudent'])
     ->name('family.login.student');
 
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->middleware(['auth', 'verified'])
-        ->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::get('/teacher-dashboard', [TeacherDashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -36,6 +36,7 @@ Route::get('/teacher-dashboard', [TeacherDashboardController::class, 'index'])
 
 Route::get('/homework', [HomeworkController::class, 'index'])->name('homework.index');
 Route::get('/homework/{id}', [HomeworkController::class, 'show'])->name('homework.show');
+Route::post('/homework', [HomeworkController::class, 'store'])->name('homework.store');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -43,4 +44,40 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+Route::get('/debug-media/{id}', function ($id) {
+    $homework = App\Models\Homework::findOrFail($id);
+    $media = $homework->getFirstMedia('diary_images');
+
+    if (!$media) {
+        return ['error' => 'No media found'];
+    }
+
+    return [
+        'id' => $media->id,
+        'file_name' => $media->file_name,
+        'path' => $media->getPath(),
+        'url' => $media->getUrl(),
+        'disk' => $media->disk,
+        'file_exists' => file_exists($media->getPath()),
+        'collection' => $media->collection_name,
+    ];
+});
+
+Route::get('/homework-images/{id}', function ($id) {
+    $homework = App\Models\Homework::findOrFail($id);
+
+    if (!$homework->hasMedia('diary_images')) {
+        abort(404);
+    }
+
+    $media = $homework->getFirstMedia('diary_images');
+    $path = $media->getPath();
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return response()->file($path);
+})->name('homework.image');
+
+require __DIR__ . '/auth.php';
