@@ -14,7 +14,7 @@ export default function TeacherDashboard({ students, recentHomework, families })
     const teacherName = "先生";
     const totalStudents = students?.length;
     const totalFamilies = families?.length;
-
+    console.log(recentHomework);
     return (
         <AuthenticatedLayout
             header={
@@ -75,7 +75,7 @@ export default function TeacherDashboard({ students, recentHomework, families })
                                                 {homework.status === "new" ? (
                                                     <Badge className="bg-blue-500">新規</Badge>
                                                 ) : (
-                                                    <Badge variant="outline" className="text-green-600 border-green-600">確認済</Badge>
+                                                    <Badge variant="outline" className={`${homework.status === "reviewed" ? "text-green-600 border-green-600" : "text-red-600 border-red-600"}`}>{homework.status === "reviewed" ? "確認済" : "未確認"}</Badge>
                                                 )}
                                             </div>
                                             <Button variant="ghost" size="sm" asChild>

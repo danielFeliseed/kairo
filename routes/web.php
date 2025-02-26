@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeacherDashboardController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeworkController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\FamilyController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +38,8 @@ Route::get('/teacher-dashboard', [TeacherDashboardController::class, 'index'])
 Route::get('/homework', [HomeworkController::class, 'index'])->name('homework.index');
 Route::get('/homework/{id}', [HomeworkController::class, 'show'])->name('homework.show');
 Route::post('/homework', [HomeworkController::class, 'store'])->name('homework.store');
+
+Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 
 Route::get('/homework-history', [HomeworkController::class, 'history'])->name('homework.history');
 

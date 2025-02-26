@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import { useForm } from '@inertiajs/react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Badge } from "@/Components/ui/badge";
 import { Button } from "@/Components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { Textarea } from "@/Components/ui/textarea";
+import { Label } from "@/Components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/Components/ui/dialog";
 import { Link } from '@inertiajs/react';
 import { 
     FileText, 
@@ -24,6 +29,30 @@ const formatDate = (dateString) => {
 
 export default function HomeworkShow({ homework, imageUrl }) {
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState(false);
+    const { data, setData, post } = useForm({
+        rating: 0,
+        feedback_text: '',
+        homework_id: homework.id,
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        post(route('feedback.store'), {
+            rating: data.rating,
+            feedback_text: data.feedback_text,
+            homework_id: data.homework_id,
+        });
+        setIsFeedbackDialogOpen(false);
+    };
+
+    const handleRatingChange = (value) => {
+        setData('rating', value);
+    };
+
+    const handleFeedbackChange = (e) => {
+        setData('feedback_text', e.target.value);
+    };
 
     console.log(imageUrl);
     return (
@@ -103,6 +132,9 @@ export default function HomeworkShow({ homework, imageUrl }) {
                                 <Badge variant={homework.feedback ? "default" : "secondary"}>
                                     {homework.feedback ? "フィードバック済" : "未フィードバック"}
                                 </Badge>
+                                <Button variant="outline" size="sm" onClick={() => setIsFeedbackDialogOpen(true)}>
+                                    フィードバックを送信
+                                </Button>
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-6">
@@ -161,6 +193,39 @@ export default function HomeworkShow({ homework, imageUrl }) {
                     </div>
                 </div>
             </div>
+
+            <Dialog open={isFeedbackDialogOpen} onOpenChange={setIsFeedbackDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>フィードバックを送信</DialogTitle>
+                    </DialogHeader>
+                    <DialogDescription>
+                        <form onSubmit={handleSubmit}>
+                            <div className="space-y-4">
+                                <div>
+                                    <Label htmlFor="rating">評価</Label>
+                                    
+                                    <Input
+                                        id="rating"
+                                        name="rating"
+                                        value={data.rating}
+                                        onChange={(e) => setData('rating', e.target.value)}
+                                    />
+                                </div>
+                                <div>
+                                    <Label htmlFor="feedback">フィードバック</Label>
+                                    <Textarea id="feedback_text" name="feedback_text" value={data.feedback_text} onChange={(e) => setData('feedback_text', e.target.value)} />
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <Button type="submit">送信</Button>
+                            </DialogFooter>
+                        </form>
+                    </DialogDescription>
+                </DialogContent>
+            </Dialog>
+
+
         </AuthenticatedLayout>
     );
 }
