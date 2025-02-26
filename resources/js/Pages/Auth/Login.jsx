@@ -80,7 +80,10 @@ export default function Login({ status, canResetPassword }) {
                     </label>
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
+                <div className="mt-4 flex items-center justify-between">
+                    <Link href="/family/access" className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        家族アクセス
+                    </Link>
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}

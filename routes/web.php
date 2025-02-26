@@ -4,18 +4,27 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeacherDashboardController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeworkController;
+use App\Http\Controllers\FamilyController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect()->route('family.access');
 });
+
+Route::get('/family/access', function () {
+    return Inertia::render('Families/Access');
+})->name('family.access');
+
+Route::post('/family/access', [FamilyController::class, 'access'])
+    ->name('family.access.submit');
+
+Route::get('/family/profiles', [FamilyController::class, 'showProfiles'])
+    ->name('family.profiles');
+
+Route::get('/family/login/{student}', [FamilyController::class, 'loginAsStudent'])
+    ->name('family.login.student');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->middleware(['auth', 'verified'])
