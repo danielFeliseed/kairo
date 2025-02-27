@@ -45,7 +45,7 @@ export default function HomeworkIndex({ homework }) {
                                         {homework.map(hw => (
                                             <TableRow key={hw.id}>
                                                 <TableCell className="font-medium">
-                                                    {hw.student.name}
+                                                    {hw.student?.name}
                                                 </TableCell>
                                                 <TableCell>
                                                     {formatDate(hw.homework_date)}

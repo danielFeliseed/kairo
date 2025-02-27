@@ -43,6 +43,8 @@ export default function TeacherDashboard({
     const [showAddStudentModal, setShowAddStudentModal] = useState(false);
     const totalStudents = students?.length;
 
+    console.log(families);
+
     const handleDelete = (id) => {
         if (confirm("本当に削除しますか？")) {
             destroy(route("student.destroy", { user: id }), {
@@ -450,7 +452,7 @@ export default function TeacherDashboard({
                                                                 <span className="mx-2">•</span>
                                                                 <span className="flex items-center">
                                                                     <Users className="h-3.5 w-3.5 mr-1 text-sky-600" />
-                                                                    {family.student_count || 0}人の生徒
+                                                                    {family.students?.length || 0}人の生徒
                                                                 </span>
                                                             </div>
                                                         </div>

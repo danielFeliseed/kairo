@@ -15,6 +15,16 @@ class CalendarController extends Controller
         $student = User::find($user->id);
         $streak = Streak::where('student_id', $user->id)->first();
 
+        if (!$streak) {
+            $streak = Streak::create([
+                'student_id' => $student->id,
+                'current_streak' => 0,
+                'longest_streak' => 0,
+            ]);
+            // Refresh the relationship
+            $student->setRelation('streak', $streak);
+        }
+
         $submissionDates = $student->homework->pluck('homework_date')->map(function($date) {
             return $date->format('Y-m-d');
         });

@@ -63,7 +63,7 @@ class DashboardController extends Controller
         
         // Get managed families
         $families = $teacher->managedFamilies;
-        
+
         // Get recent homework submissions
         $recentHomework = $this->getRecentHomework($students);
         
