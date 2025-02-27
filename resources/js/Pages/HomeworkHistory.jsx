@@ -85,20 +85,20 @@ export default function HomeworkHistory({ auth, homework }) {
                                         <div className="mt-2">
                                             <Badge
                                                 className={`${
-                                                    item.status === "Completed"
+                                                    item.status === "reviewed"
                                                         ? "bg-green-100 text-green-700 border border-green-300"
-                                                        : item.status === "Pending"
+                                                        : item.status === "submitted"
                                                         ? "bg-yellow-100 text-yellow-700 border border-yellow-300"
                                                         : "bg-gray-100 text-gray-700 border border-gray-300"
                                                 } px-3 py-1 rounded-full text-sm font-medium`}
                                             >
-                                                {item.status === "Completed" ? (
+                                                {item.status === "reviewed" ? (
                                                     <span className="flex items-center">
                                                         <CheckCircle className="w-3 h-3 mr-1" />
-                                                        おわった！
+                                                        先生が見たよ！
                                                     </span>
-                                                ) : item.status === "Pending" ? (
-                                                    "まだだよ"
+                                                ) : item.status === "submitted" ? (
+                                                    "先生からのコメントまち"
                                                 ) : (
                                                     item.status
                                                 )}

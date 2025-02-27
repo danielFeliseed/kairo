@@ -22,7 +22,6 @@ export default function AuthenticatedLayout({ header, children }) {
     const { auth, flash } = usePage().props;
     const user = auth.user;
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
-    const [darkMode, setDarkMode] = useState(false);
     const [notification, setNotification] = useState(flash?.message || null);
     
     useEffect(() => {
@@ -34,11 +33,6 @@ export default function AuthenticatedLayout({ header, children }) {
             return () => clearTimeout(timer);
         }
     }, [flash]);
-
-    const toggleDarkMode = () => {
-        setDarkMode(!darkMode);
-        document.documentElement.classList.toggle('dark');
-    };
 
     const isStudent = user.role === 'student';
     const isTeacher = user.role === 'teacher';
@@ -52,7 +46,7 @@ export default function AuthenticatedLayout({ header, children }) {
     const avatarText = user.name ? user.name.charAt(0).toUpperCase() : 'U';
 
     return (
-        <div className={`min-h-screen ${darkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
+        <div className={`min-h-screen bg-gray-50`}>
             {/* Notification Toast */}
             {notification && (
                 <div className="fixed top-4 right-4 z-50 max-w-sm bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-lg">
@@ -70,14 +64,14 @@ export default function AuthenticatedLayout({ header, children }) {
                 </div>
             )}
 
-            <nav className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-b sticky top-0 z-40 shadow-sm`}>
+            <nav className={`bg-white border-gray-200 border-b sticky top-0 z-40 shadow-sm`}>
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
                                 <Link href={route('dashboard')} className="flex items-center">
-                                    <ApplicationLogo className={`block h-9 w-auto ${darkMode ? 'fill-white' : 'fill-blue-600'}`} />
-                                    <span className={`ml-2 text-lg font-bold ${darkMode ? 'text-white' : 'text-blue-600'} hidden sm:block`}>
+                                    <ApplicationLogo className={`block h-9 w-auto`} />
+                                    <span className={`ml-2 text-lg font-bold hidden sm:block`}>
                                         NoBi
                                     </span>
                                 </Link>
@@ -89,7 +83,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                         <NavLink 
                                             href={route('dashboard')} 
                                             active={route().current('dashboard')}
-                                            className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-700' : 'text-gray-600 hover:text-blue-700 hover:bg-blue-50'}`}
+                                            className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:text-blue-700 hover:bg-blue-50`}
                                         >
                                             <Home className="w-4 h-4 mr-2" />
                                             ホーム
@@ -97,10 +91,18 @@ export default function AuthenticatedLayout({ header, children }) {
                                         <NavLink 
                                             href={route('homework.history')} 
                                             active={route().current('homework.history')}
-                                            className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-700' : 'text-gray-600 hover:text-blue-700 hover:bg-blue-50'}`}
+                                            className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:text-blue-700 hover:bg-blue-50`}
                                         >
                                             <Book className="w-4 h-4 mr-2" />
                                             べんきょうのきろく
+                                        </NavLink>
+                                        <NavLink 
+                                            href={route('calendar.index')} 
+                                            active={route().current('calendar.index')}
+                                            className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:text-blue-700 hover:bg-blue-50`}
+                                        >
+                                            <Calendar className="w-4 h-4 mr-2" />
+                                            カレンダー
                                         </NavLink>
                                     </>
                                 )}
@@ -110,7 +112,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                         <NavLink 
                                             href={route('dashboard')} 
                                             active={route().current('dashboard')}
-                                            className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-700' : 'text-gray-600 hover:text-blue-700 hover:bg-blue-50'}`}
+                                            className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:text-blue-700 hover:bg-blue-50`}
                                         >
                                             <Home className="w-4 h-4 mr-2" />
                                             ダッシュボード
@@ -118,7 +120,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                         <NavLink 
                                             href={route('homework.index')} 
                                             active={route().current('homework.index')}
-                                            className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors ${darkMode ? 'text-gray-300 hover:text-white hover:bg-gray-700' : 'text-gray-600 hover:text-blue-700 hover:bg-blue-50'}`}
+                                            className={`inline-flex items-center px-3 py-2 rounded-md text-sm font-medium transition-colors text-gray-600 hover:text-blue-700 hover:bg-blue-50`}
                                         >
                                             <Book className="w-4 h-4 mr-2" />
                                             宿題一覧
@@ -129,13 +131,6 @@ export default function AuthenticatedLayout({ header, children }) {
                         </div>
 
                         <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-3">
-                            {/* Dark mode toggle */}
-                            <button
-                                onClick={toggleDarkMode}
-                                className={`p-2 rounded-full ${darkMode ? 'bg-gray-700 text-yellow-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'} transition-colors`}
-                            >
-                                {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                            </button>
 
                             {/* User dropdown */}
                             <div className="relative">
@@ -150,9 +145,9 @@ export default function AuthenticatedLayout({ header, children }) {
                                             >
                                                 {avatarText}
                                             </div>
-                                            <div className={`ml-2 ${darkMode ? 'text-white' : 'text-gray-700'}`}>
+                                            <div className={`ml-2`}>
                                                 <span className="text-sm font-medium">{user.name}</span>
-                                                <span className={`block text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                                <span className={`block text-xs`}>
                                                     {user.role === 'student' ? 'がくせい' : 'せんせい'}
                                                 </span>
                                             </div>
@@ -160,12 +155,12 @@ export default function AuthenticatedLayout({ header, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content 
-                                        contentClasses={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white'} rounded-md shadow-lg py-1`}
+                                        contentClasses={`bg-white rounded-md shadow-lg py-1`}
                                         width="48"
                                     >
                                         <Dropdown.Link 
                                             href={route('profile.edit')}
-                                            className={`flex items-center px-4 py-2 text-sm ${darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'}`}
+                                            className={`flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100`}
                                         >
                                             <User className="mr-2 h-4 w-4" />
                                             プロフィール
@@ -174,7 +169,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                         {isStudent && (
                                             <Dropdown.Link 
                                                 href="/family/profiles"
-                                                className={`flex items-center px-4 py-2 text-sm ${darkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'}`}
+                                                className={`flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100`}
                                             >
                                                 <Award className="mr-2 h-4 w-4" />
                                                 きょうだいにかえる
@@ -185,7 +180,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                             href={route('logout')}
                                             method="post"
                                             as="button"
-                                            className={`w-full text-left flex items-center px-4 py-2 text-sm ${darkMode ? 'text-red-400 hover:bg-gray-700' : 'text-red-600 hover:bg-gray-100'}`}
+                                            className={`w-full text-left flex items-center px-4 py-2 text-sm text-red-600 hover:bg-gray-100`}
                                         >
                                             <LogOut className="mr-2 h-4 w-4" />
                                             ログアウト
@@ -199,7 +194,7 @@ export default function AuthenticatedLayout({ header, children }) {
                         <div className="flex items-center sm:hidden">
                             <button
                                 onClick={() => setShowingNavigationDropdown(!showingNavigationDropdown)}
-                                className={`p-2 rounded-md ${darkMode ? 'text-gray-400 hover:text-white hover:bg-gray-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'}`}
+                                className={`p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100`}
                             >
                                 {showingNavigationDropdown ? (
                                     <X className="h-6 w-6" />
@@ -213,7 +208,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
                 {/* Mobile menu */}
                 <div className={`${showingNavigationDropdown ? 'block' : 'hidden'} sm:hidden`}>
-                    <div className={`space-y-1 pb-3 pt-2 ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                    <div className={`space-y-1 pb-3 pt-2 border-gray-200`}>
                         {isStudent && (
                             <>
                                 <ResponsiveNavLink 
@@ -231,6 +226,14 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     <Book className="w-4 h-4 mr-2" />
                                     べんきょうのきろく
+                                </ResponsiveNavLink>
+                                <ResponsiveNavLink 
+                                    href={route('calendar.index')} 
+                                    active={route().current('calendar.index')}
+                                    className="flex items-center"
+                                >
+                                    <Calendar className="w-4 h-4 mr-2" />
+                                    カレンダー
                                 </ResponsiveNavLink>
                             </>
                         )}
@@ -257,7 +260,7 @@ export default function AuthenticatedLayout({ header, children }) {
                         )}
                     </div>
 
-                    <div className={`border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} pb-3 pt-4`}>
+                    <div className={`border-t border-gray-200 pb-3 pt-4`}>
                         <div className="flex items-center px-4">
                             <div 
                                 className="h-10 w-10 rounded-full flex items-center justify-center text-white font-medium" 
@@ -266,19 +269,19 @@ export default function AuthenticatedLayout({ header, children }) {
                                 {avatarText}
                             </div>
                             <div className="ml-3">
-                                <div className={`text-base font-medium ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                                <div className={`text-base font-medium`}>
                                     {user.name}
                                 </div>
-                                <div className={`text-sm font-medium ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                <div className={`text-sm font-medium`}>
                                     {user.email}
                                 </div>
                             </div>
-                            <button
+                            {/* <button
                                 onClick={toggleDarkMode}
-                                className={`ml-auto p-2 rounded-full ${darkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-100 text-gray-500'}`}
+                                className={`ml-auto p-2 rounded-full`}
                             >
                                 {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                            </button>
+                            </button> */}
                         </div>
 
                         <div className="mt-3 space-y-1">
@@ -324,16 +327,16 @@ export default function AuthenticatedLayout({ header, children }) {
                 </header>
             )} */}
 
-            <main className={`${darkMode ? 'text-white' : ''}`}>
+            <main>
                 {children}
             </main>
             
             {/* Footer */}
-            <footer className={`mt-auto py-6 ${darkMode ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-600'}`}>
+            <footer className={`mt-auto py-6`}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row justify-between items-center">
                         <div className="flex items-center mb-4 md:mb-0">
-                            <ApplicationLogo className={`h-8 w-8 ${darkMode ? 'fill-white' : 'fill-blue-600'}`} />
+                            <ApplicationLogo className={`h-8 w-8`} />
                             <span className="ml-2 text-sm font-semibold">NoBi © {new Date().getFullYear()}</span>
                         </div>
                         <div className="flex space-x-6">
