@@ -188,6 +188,24 @@ export default function StudentDashboard({
                         </CardContent>
                     </Card>
 
+                    <Card className="mb-6">
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-lg">
+                                今日のことば
+                            </CardTitle>
+                            <CardDescription>
+                                今日のことばを覚えてください
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-center py-3">
+                                <p className="text-lg mb-4">
+                                    Friend - 友だち
+                                </p>
+                            </div>
+                        </CardContent>
+                    </Card>
+
                     {/* Streak Card */}
                     <Card className="mb-6">
                         <CardHeader className="pb-2">
