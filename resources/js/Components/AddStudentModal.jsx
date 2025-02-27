@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useForm } from "@inertiajs/react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/Components/ui/dialog";
 import { Input } from "@/Components/ui/input";
 import { Label } from "@/Components/ui/label";
@@ -8,15 +9,12 @@ import { RadioGroup, RadioGroupItem } from "@/Components/ui/radio-group";
 import { UserPlus, Users, Palette, School, CalendarDays } from "lucide-react";
 
 export default function AddStudentModal({ onClose, onSubmit, families = [] }) {
-    const [formData, setFormData] = useState({
+    const { data, setData, post, errors, processing } = useForm({
         name: "",
         family_id: "",
         profile_color: "#4F46E5", // Default indigo color
-        grade: "",
-        birth_date: ""
     });
     
-    const [errors, setErrors] = useState({});
     
     // Predefined color options for student profiles
     const colorOptions = [
@@ -36,7 +34,7 @@ export default function AddStudentModal({ onClose, onSubmit, families = [] }) {
     
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setData(prev => ({ ...prev, [name]: value }));
         
         // Clear error for this field when user types
         if (errors[name]) {
@@ -45,7 +43,7 @@ export default function AddStudentModal({ onClose, onSubmit, families = [] }) {
     };
     
     const handleSelectChange = (name, value) => {
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setData(prev => ({ ...prev, [name]: value }));
         
         // Clear error for this field
         if (errors[name]) {
@@ -55,19 +53,12 @@ export default function AddStudentModal({ onClose, onSubmit, families = [] }) {
     
     const handleSubmit = (e) => {
         e.preventDefault();
-        
-        // Validate form
-        const newErrors = {};
-        if (!formData.name.trim()) newErrors.name = "名前を入力してください";
-        if (!formData.family_id) newErrors.family_id = "家族を選択してください";
-        if (!formData.grade) newErrors.grade = "学年を選択してください";
-        
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            return;
-        }
-        
-        onSubmit(formData);
+        post('/student', {
+            name: data.name,
+            family_id: data.family_id,
+            profile_color: data.profile_color,
+        });
+        onClose();
     };
     
     return (
@@ -98,7 +89,7 @@ export default function AddStudentModal({ onClose, onSubmit, families = [] }) {
                                 type="text" 
                                 id="name" 
                                 name="name" 
-                                value={formData.name}
+                                value={data.name}
                                 onChange={handleChange}
                                 placeholder="例: 田中太郎"
                                 className={errors.name ? "border-red-300" : ""}
@@ -116,7 +107,7 @@ export default function AddStudentModal({ onClose, onSubmit, families = [] }) {
                                 <span className="text-red-500 ml-1">*</span>
                             </Label>
                             <Select 
-                                value={formData.family_id} 
+                                value={data.family_id} 
                                 onValueChange={(value) => handleSelectChange("family_id", value)}
                             >
                                 <SelectTrigger className={errors.family_id ? "border-red-300" : ""}>
@@ -142,7 +133,7 @@ export default function AddStudentModal({ onClose, onSubmit, families = [] }) {
                                 プロフィールカラー
                             </Label>
                             <RadioGroup 
-                                value={formData.profile_color}
+                                value={data.profile_color}
                                 onValueChange={(value) => handleSelectChange("profile_color", value)}
                                 className="grid grid-cols-6 gap-2"
                             >
@@ -158,7 +149,7 @@ export default function AddStudentModal({ onClose, onSubmit, families = [] }) {
                                             className={`
                                                 h-8 w-8 rounded-full cursor-pointer ring-offset-2 
                                                 ${color.class} 
-                                                ${formData.profile_color === color.value ? 'ring-2 ring-blue-600' : ''}
+                                                ${data.profile_color === color.value ? 'ring-2 ring-blue-600' : ''}
                                                 hover:opacity-90 transition-opacity
                                             `}
                                             title={color.label}

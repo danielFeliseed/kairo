@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Button } from "@/Components/ui/button";
@@ -16,10 +16,7 @@ export default function TeacherDashboard({ students, recentHomework, families })
     const [showAddStudentModal, setShowAddStudentModal] = useState(false);
     const totalStudents = students?.length;
 
-    const handleAddStudent = (e) => {
-        e.preventDefault();
-        console.log(e.target.name.value);
-    }
+   
     return (
         <AuthenticatedLayout
             header={
@@ -213,8 +210,8 @@ export default function TeacherDashboard({ students, recentHomework, families })
             {showAddStudentModal && (
                 <AddStudentModal 
                     onClose={() => setShowAddStudentModal(false)} 
-                    onSubmit={handleAddStudent}
                     families={families}
+                    
                 />
             )}
         </AuthenticatedLayout>

@@ -44,10 +44,10 @@ class DashboardController extends Controller
             
             return Inertia::render('StudentDashboard', [
                 'user' => $student,
-                'currentStreak' => $streak->getCurrentStreak(),
-                'longestStreak' => $streak->getLongestStreak(),
-                'lastSubmission' => $streak->getLastSubmission(),
-                'currentStreakPercentage' => $streak->getStreakPercentageAttribute(),
+                'currentStreak' => $user->streak?->getCurrentStreak() ?? 0,
+                'longestStreak' => $user->streak?->getLongestStreak() ?? 0,
+                'lastSubmission' => $user->streak?->getLastSubmission() ?? null,
+                'currentStreakPercentage' => $user->streak?->getStreakPercentageAttribute() ?? 0,
                 'latestHomework' => $latestHomework,
                 'latestFeedback' => $latestHomework ? $latestHomework->getLatestFeedback() : null,
                 'hasSubmittedToday' => $hasSubmittedToday,

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class Streak extends Model
 {
@@ -52,9 +53,7 @@ class Streak extends Model
         $submissionDate = $submissionDate instanceof Carbon 
             ? $submissionDate 
             : Carbon::parse($submissionDate);
-        
-        // Log the submission date for debugging
-        \Log::info('Updating streak for submission date: ' . $submissionDate->format('Y-m-d'));
+    
 
         // Get missed days (if any)
         $missedDays = $this->missed_days ?? [];
@@ -67,14 +66,8 @@ class Streak extends Model
             $lastSubmission = $this->last_submission->startOfDay(); // Use startOfDay()
             $submissionDate = $submissionDate->startOfDay(); // Ensure submissionDate is also at start of day
 
-            // Log the values for debugging
-            \Log::info('Last Submission Date: ' . $lastSubmission->format('Y-m-d H:i:s'));
-            \Log::info('Submission Date: ' . $submissionDate->format('Y-m-d H:i:s'));
-
             $dayDifference = $submissionDate->diffInDays($lastSubmission);
             
-            // Log the day difference for debugging
-            \Log::info('Day difference: ' . $dayDifference);
 
             if ($dayDifference == 1 || ($dayDifference == 0 && $submissionDate->gt($lastSubmission))) {
                 // Consecutive day submission
@@ -172,16 +165,25 @@ class Streak extends Model
 
     public function getCurrentStreak()
     {
+        if (!$this->current_streak) {
+            return 0;
+        }
         return $this->current_streak;
     }
 
     public function getLongestStreak()
     {
+        if (!$this->longest_streak) {
+            return 0;
+        }
         return $this->longest_streak;
     }
 
     public function getLastSubmission()
     {
+        if (!$this->last_submission) {
+            return null;
+        }
         return $this->last_submission;
     }
 

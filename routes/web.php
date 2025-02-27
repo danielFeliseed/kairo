@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeworkController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/homework-history', [HomeworkController::class, 'history'])->name('homework.history');
     Route::delete('/homework/{id}', [HomeworkController::class, 'destroy'])->name('homework.destroy');
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
+    Route::post('/student', [StudentController::class, 'store'])->name('student.store');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
