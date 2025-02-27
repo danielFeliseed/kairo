@@ -1,20 +1,25 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Button } from "@/Components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/Components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
 import { Badge } from "@/Components/ui/badge";
+import AddStudentModal from "@/Components/AddStudentModal";
 import { ScrollArea } from "@/Components/ui/scroll-area";
 import { Users, BookOpen, Calendar, Image, Award, Plus, Search } from "lucide-react";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 
 export default function TeacherDashboard({ students, recentHomework, families }) {
-    const teacherName = "先生";
+    const [showAddStudentModal, setShowAddStudentModal] = useState(false);
     const totalStudents = students?.length;
-    const totalFamilies = families?.length;
-    console.log(recentHomework);
+
+    const handleAddStudent = (e) => {
+        e.preventDefault();
+        console.log(e.target.name.value);
+    }
     return (
         <AuthenticatedLayout
             header={
@@ -111,10 +116,8 @@ export default function TeacherDashboard({ students, recentHomework, families })
                                 <CardHeader className="pb-2">
                                     <div className="flex justify-between items-center">
                                         <CardTitle className="text-lg">生徒 ({students?.length})</CardTitle>
-                                        <Button size="sm" className="gap-1" asChild>
-                                            <a href="/students/create">
-                                                <Plus size={16} /> 追加
-                                            </a>
+                                        <Button onClick={() => setShowAddStudentModal(true)} size="sm" className="gap-1">
+                                            <Plus size={16} /> 追加
                                         </Button>
                                     </div>
                                 </CardHeader>
@@ -206,6 +209,14 @@ export default function TeacherDashboard({ students, recentHomework, families })
                     </div>
                 </div>
             </div>
+
+            {showAddStudentModal && (
+                <AddStudentModal 
+                    onClose={() => setShowAddStudentModal(false)} 
+                    onSubmit={handleAddStudent}
+                    families={families}
+                />
+            )}
         </AuthenticatedLayout>
     );
 }
