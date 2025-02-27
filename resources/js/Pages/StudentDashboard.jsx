@@ -25,11 +25,16 @@ import {
     Award,
     ArrowRight,
     MessageSquare,
+    Star,
+    Sparkles,
+    Sun,
+    Image,
 } from "lucide-react";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import { useRef, useState } from "react";
 import { useForm } from "@inertiajs/react";
+
 export default function StudentDashboard({
     user,
     currentStreak,
@@ -41,7 +46,6 @@ export default function StudentDashboard({
     hasSubmittedToday,
 }) {
     const hasTodaysHomework = hasSubmittedToday;
-    console.log(hasTodaysHomework);
 
     const [capturedImage, setCapturedImage] = useState(null);
     const [isCameraActive, setIsCameraActive] = useState(false);
@@ -49,7 +53,6 @@ export default function StudentDashboard({
     const videoRef = useRef(null);
     const fileInputRef = useRef(null);
 
-    // Add this form for handling uploads
     const { data, setData, post, processing, errors, reset } = useForm({
         image: null,
     });
@@ -58,7 +61,6 @@ export default function StudentDashboard({
         setIsDialogOpen(true);
     };
 
-    // Add these functions for camera handling
     const startCamera = async () => {
         setIsCameraActive(true);
         setCapturedImage(null);
@@ -74,7 +76,7 @@ export default function StudentDashboard({
         } catch (err) {
             console.error("Error accessing camera:", err);
             alert(
-                "カメラへのアクセスができませんでした。ブラウザの設定を確認してください。"
+                "カメラを使えないよ。おうちの人に聞いてみてね。"
             );
             setIsCameraActive(false);
         }
@@ -98,7 +100,6 @@ export default function StudentDashboard({
             const ctx = canvas.getContext("2d");
             ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
-            // Convert to file
             canvas.toBlob(
                 (blob) => {
                     const file = new File([blob], "homework.jpg", {
@@ -128,7 +129,6 @@ export default function StudentDashboard({
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(data.image);
         post(route("homework.store"), {
             image: data.image,
             onSuccess: () => {
@@ -138,23 +138,41 @@ export default function StudentDashboard({
             },
         });
     };
+
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800">
+                <h2 className="text-xl font-semibold leading-tight text-blue-700 flex items-center">
+                    <Star className="h-5 w-5 mr-2 text-yellow-500" />
                     {user.name}のページ
                 </h2>
             }
         >
-            <Head title="生徒ダッシュボード" />
+            <Head title="おうちでべんきょう" />
 
-            <div className="py-6">
+            <div className="py-6 bg-gradient-to-b from-blue-50 to-white">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    {/* Welcome Banner */}
+                    <div className="mb-6 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl p-4 border-2 border-blue-200 shadow-sm">
+                        <div className="flex items-center">
+                            <Sun className="h-10 w-10 text-yellow-500 mr-3" />
+                            <div>
+                                <h1 className="text-xl font-bold text-blue-700">
+                                    こんにちは、{user.name}さん！
+                                </h1>
+                                <p className="text-blue-600">
+                                    今日も英語をがんばろう！
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Today's Homework Status */}
-                    <Card className="mb-6 border-2 border-primary">
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-lg">
-                                今日の宿題
+                    <Card className="mb-6 border-2 border-primary overflow-hidden">
+                        <CardHeader className="pb-2 bg-gradient-to-r from-blue-50 to-indigo-50">
+                            <CardTitle className="text-lg flex items-center">
+                                <Book className="h-5 w-5 mr-2 text-blue-600" />
+                                きょうの宿題
                             </CardTitle>
                             <CardDescription>
                                 {format(new Date(), "yyyy年MM月dd日 (EEEE)", {
@@ -162,93 +180,128 @@ export default function StudentDashboard({
                                 })}
                             </CardDescription>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="pt-4">
                             {hasTodaysHomework ? (
-                                <div className="text-center py-3">
-                                    <div className="text-green-600 font-bold text-lg mb-2">
-                                        ✅ 今日の宿題は提出済みです！
+                                <div className="text-center py-6 bg-green-50 rounded-lg border border-green-200">
+                                    <div className="flex items-center justify-center mb-2">
+                                        <Sparkles className="h-6 w-6 text-yellow-500 mr-2" />
+                                        <span className="text-green-600 font-bold text-lg">
+                                            やったね！きょうの宿題はおわったよ！
+                                        </span>
                                     </div>
                                     <p className="text-sm text-gray-500">
-                                        先生からのコメントをお待ちください
+                                        先生からのコメントをまっているよ
                                     </p>
                                 </div>
                             ) : (
-                                <div className="text-center py-3">
-                                    <p className="text-lg mb-4">
-                                        今日の英語日記をアップロードしてください
+                                <div className="text-center py-6">
+                                    <p className="text-lg mb-4 font-medium text-blue-700">
+                                        きょうの英語日記をとってね
                                     </p>
                                     <Button
-                                        className="gap-2 bg-blue-500 hover:bg-blue-600"
+                                        className="gap-2 bg-blue-500 hover:bg-blue-600 rounded-full px-6 py-6 text-lg shadow-md"
                                         onClick={handleTakePhoto}
                                     >
-                                        <Camera size={20} /> 写真をとる
+                                        <Camera size={24} /> 写真をとる
                                     </Button>
                                 </div>
                             )}
                         </CardContent>
                     </Card>
 
-                    <Card className="mb-6">
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-lg">
-                                今日のことば
+                    <Card className="mb-6 border-2 border-yellow-300 overflow-hidden">
+                        <CardHeader className="pb-2 bg-gradient-to-r from-yellow-50 to-orange-50">
+                            <CardTitle className="text-lg flex items-center">
+                                <Star className="h-5 w-5 mr-2 text-yellow-500" />
+                                きょうのことば
                             </CardTitle>
                             <CardDescription>
-                                今日のことばを覚えてください
+                                このことばをおぼえよう！
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-center py-3">
-                                <p className="text-lg mb-4">
-                                    Friend - 友だち
-                                </p>
+                            <div className="text-center py-4 px-2">
+                                <div className="bg-white rounded-lg p-4 shadow-sm border border-yellow-200">
+                                    <p className="text-2xl font-bold mb-2 text-blue-700">
+                                        Friend
+                                    </p>
+                                    <p className="text-lg text-gray-700">
+                                        ともだち
+                                    </p>
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Streak Card */}
-                    <Card className="mb-6">
-                        <CardHeader className="pb-2">
+                    <Card className="mb-6 border-2 border-orange-300 overflow-hidden">
+                        <CardHeader className="pb-2 bg-gradient-to-r from-orange-50 to-amber-50">
                             <CardTitle className="flex items-center gap-2">
-                                <Award size={20} />
-                                <span>れんぞく記録</span>
+                                <Award size={20} className="text-orange-500" />
+                                <span>れんぞくきろく</span>
                             </CardTitle>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center justify-between mb-2">
-                                <span>現在の記録：</span>
-                                <span className="font-bold text-orange-500">
-                                    {currentStreak}日
-                                </span>
+                        <CardContent className="pt-4">
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="font-medium">いまのきろく：</span>
+                                <div className="flex items-center">
+                                    <span className="font-bold text-xl text-orange-500 mr-1">
+                                        {currentStreak}
+                                    </span>
+                                    <span className="text-orange-500">にち</span>
+                                </div>
                             </div>
-                            <Progress
-                                value={currentStreakPercentage}
-                                className="h-2 mb-2"
-                            />
+                            <div className="relative mb-3">
+                                <Progress
+                                    value={currentStreakPercentage}
+                                    className="h-4 rounded-full bg-orange-100"
+                                />
+                                {currentStreakPercentage >= 20 && (
+                                    <div 
+                                        className="absolute top-0 left-0 h-4 flex items-center pl-2 text-xs font-bold text-white"
+                                        style={{ width: `${Math.min(100, currentStreakPercentage)}%` }}
+                                    >
+                                        {currentStreak}日れんぞく！
+                                    </div>
+                                )}
+                            </div>
                             <div className="flex items-center justify-between text-sm">
-                                <span>一番長い記録：</span>
-                                <span className="font-semibold">
-                                    {longestStreak}日
-                                </span>
+                                <span>いちばん長いきろく：</span>
+                                <div className="flex items-center">
+                                    <span className="font-semibold text-lg">
+                                        {longestStreak}
+                                    </span>
+                                    <span>にち</span>
+                                </div>
                             </div>
+                            
+                            {currentStreak > 0 && (
+                                <div className="mt-3 text-center">
+                                    <p className="text-sm text-blue-600">
+                                        {currentStreak >= 5 
+                                            ? "すごい！よくがんばってるね！" 
+                                            : "あしたもがんばろう！"}
+                                    </p>
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
 
                     {/* Latest Feedback */}
-                    <Card className="mb-6">
-                        <CardHeader className="pb-2">
+                    <Card className="mb-6 border-2 border-purple-200 overflow-hidden">
+                        <CardHeader className="pb-2 bg-gradient-to-r from-purple-50 to-pink-50">
                             <CardTitle className="flex items-center gap-2">
-                                <MessageSquare size={20} />
-                                <span>先生からのコメント</span>
+                                <MessageSquare size={20} className="text-purple-500" />
+                                <span>先生からのメッセージ</span>
                             </CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="pt-4">
                             {latestFeedback ? (
-                                <div>
+                                <div className="bg-white p-3 rounded-lg border border-purple-100">
                                     <div className="flex justify-between items-center mb-2">
                                         <span className="text-sm text-gray-500">
                                             {format(
-                                                latestFeedback.created_at,
+                                                new Date(latestFeedback.created_at),
                                                 "MM月dd日",
                                                 { locale: ja }
                                             )}
@@ -269,14 +322,17 @@ export default function StudentDashboard({
                                             ))}
                                         </div>
                                     </div>
-                                    <p className="text-gray-700">
+                                    <p className="text-gray-700 p-2 bg-purple-50 rounded-lg">
                                         {latestFeedback?.feedback_text}
                                     </p>
                                 </div>
                             ) : (
-                                <p className="text-center py-3 text-gray-500">
-                                    まだコメントはありません
-                                </p>
+                                <div className="text-center py-6 bg-gray-50 rounded-lg">
+                                    <MessageSquare className="h-10 w-10 mx-auto mb-2 text-gray-300" />
+                                    <p className="text-gray-500">
+                                        まだメッセージはないよ
+                                    </p>
+                                </div>
                             )}
                         </CardContent>
                     </Card>
@@ -285,22 +341,22 @@ export default function StudentDashboard({
                     <div className="grid grid-cols-2 gap-4">
                         <Button
                             variant="outline"
-                            className="h-20 flex flex-col items-center justify-center gap-1"
+                            className="h-24 flex flex-col items-center justify-center gap-1 border-2 border-blue-200 bg-blue-50 hover:bg-blue-100 rounded-xl"
                             asChild
                         >
                             <a href="/homework-history">
-                                <Book size={24} />
-                                <span>宿題の履歴</span>
+                                <Book size={28} className="text-blue-600" />
+                                <span className="font-medium">べんきょうのきろく</span>
                             </a>
                         </Button>
                         <Button
                             variant="outline"
-                            className="h-20 flex flex-col items-center justify-center gap-1"
+                            className="h-24 flex flex-col items-center justify-center gap-1 border-2 border-green-200 bg-green-50 hover:bg-green-100 rounded-xl"
                             asChild
                         >
                             <a href="/calendar">
-                                <CalendarDays size={24} />
-                                <span>カレンダー</span>
+                                <CalendarDays size={28} className="text-green-600" />
+                                <span className="font-medium">カレンダー</span>
                             </a>
                         </Button>
                     </div>
@@ -308,14 +364,13 @@ export default function StudentDashboard({
             </div>
 
             {/* Profile switcher button fixed at bottom */}
-            <div className="fixed bottom-4 right-4">
+            <div className="fixed bottom-6 right-6">
                 <Button
-                    className="rounded-full h-14 w-14 flex items-center justify-center shadow-lg"
-                    variant="secondary"
+                    className="rounded-full h-16 w-16 flex items-center justify-center shadow-lg bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
                     asChild
                 >
                     <a href="/family/profiles">
-                        <ArrowRight size={24} />
+                        <ArrowRight size={28} className="text-white" />
                     </a>
                 </Button>
             </div>
@@ -330,17 +385,20 @@ export default function StudentDashboard({
                     }
                 }}
             >
-                <DialogContent className="sm:max-w-md">
+                <DialogContent className="sm:max-w-md rounded-xl">
                     <DialogHeader>
-                        <DialogTitle>宿題の提出</DialogTitle>
-                        <DialogDescription>
-                            今日の英語日記の写真を撮ってください
+                        <DialogTitle className="text-xl text-center text-blue-700 flex items-center justify-center">
+                            <Camera className="h-5 w-5 mr-2 text-blue-500" />
+                            宿題をとろう！
+                        </DialogTitle>
+                        <DialogDescription className="text-center">
+                            きょうの英語日記の写真をとってね
                         </DialogDescription>
                     </DialogHeader>
 
                     <div className="flex flex-col space-y-4">
                         {isCameraActive && (
-                            <div className="relative bg-black rounded-md overflow-hidden aspect-[4/3] flex items-center justify-center">
+                            <div className="relative bg-black rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center">
                                 <video
                                     ref={videoRef}
                                     autoPlay
@@ -349,17 +407,17 @@ export default function StudentDashboard({
                                 />
                                 <Button
                                     onClick={capturePhoto}
-                                    className="absolute bottom-3 left-1/2 transform -translate-x-1/2 bg-white text-black hover:bg-gray-200"
+                                    className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-black hover:bg-gray-200 rounded-full px-6 py-6"
                                     size="lg"
                                     variant="outline"
                                 >
-                                    <Camera className="mr-2 h-4 w-4" /> 撮影する
+                                    <Camera className="mr-2 h-5 w-5" /> パシャ！
                                 </Button>
                             </div>
                         )}
 
                         {capturedImage && (
-                            <div className="relative bg-black rounded-md overflow-hidden aspect-[4/3] flex items-center justify-center">
+                            <div className="relative bg-black rounded-xl overflow-hidden aspect-[4/3] flex items-center justify-center">
                                 <img
                                     src={capturedImage}
                                     alt="Captured"
@@ -369,10 +427,11 @@ export default function StudentDashboard({
                         )}
 
                         {!isCameraActive && !capturedImage && (
-                            <div className="flex flex-col space-y-4 p-6 items-center justify-center border-2 border-dashed border-gray-300 rounded-md">
+                            <div className="flex flex-col space-y-4 p-8 items-center justify-center border-2 border-dashed border-blue-300 rounded-xl bg-blue-50">
+                                <Image className="h-16 w-16 text-blue-300" />
                                 <div className="text-center">
-                                    <p>
-                                        写真を撮るか、ギャラリーから選択してください
+                                    <p className="text-blue-700">
+                                        写真をとるか、えらんでね
                                     </p>
                                 </div>
                             </div>
@@ -386,15 +445,15 @@ export default function StudentDashboard({
                             onChange={handleFileChange}
                         />
 
-                        <div className="flex space-x-2">
+                        <div className="flex space-x-3">
                             {!isCameraActive && (
                                 <Button
                                     onClick={startCamera}
                                     variant="default"
-                                    className="flex-1"
+                                    className="flex-1 py-6 rounded-xl bg-blue-500 hover:bg-blue-600"
                                 >
-                                    <Camera className="mr-2 h-4 w-4" />{" "}
-                                    カメラを起動
+                                    <Camera className="mr-2 h-5 w-5" />{" "}
+                                    カメラをつかう
                                 </Button>
                             )}
 
@@ -402,9 +461,9 @@ export default function StudentDashboard({
                                 <Button
                                     onClick={stopCamera}
                                     variant="outline"
-                                    className="flex-1"
+                                    className="flex-1 py-6 rounded-xl"
                                 >
-                                    キャンセル
+                                    やめる
                                 </Button>
                             )}
 
@@ -412,9 +471,9 @@ export default function StudentDashboard({
                                 <Button
                                     onClick={selectFromGallery}
                                     variant="outline"
-                                    className="flex-1"
+                                    className="flex-1 py-6 rounded-xl"
                                 >
-                                    ギャラリーから選択
+                                    アルバムからえらぶ
                                 </Button>
                             )}
                         </div>
@@ -422,23 +481,24 @@ export default function StudentDashboard({
 
                     <DialogFooter className="sm:justify-start">
                         {capturedImage && (
-                            <div className="flex space-x-2 w-full">
+                            <div className="flex space-x-3 w-full">
                                 <Button
                                     variant="outline"
                                     onClick={() => {
                                         setCapturedImage(null);
                                         setData("image", null);
                                     }}
-                                    className="flex-1"
+                                    className="flex-1 py-6 rounded-xl"
                                 >
-                                    やり直す
+                                    もういちど
                                 </Button>
                                 <Button
                                     disabled={processing || !data.image}
                                     onClick={handleSubmit}
-                                    className="flex-1 bg-green-600 hover:bg-green-700"
+                                    className="flex-1 py-6 rounded-xl bg-green-600 hover:bg-green-700 text-lg"
                                 >
-                                    提出する
+                                    <Sparkles className="mr-2 h-5 w-5" />
+                                    おくる
                                 </Button>
                             </div>
                         )}
