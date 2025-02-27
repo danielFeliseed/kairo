@@ -27,4 +27,11 @@ class StudentController extends Controller
 
         return redirect()->route('teacher-dashboard')->with('success', '生徒が追加されました。');
     }
+
+    public function destroy(Request $request, User $user)
+    {
+        $user->delete();
+
+        return redirect()->route('teacher-dashboard')->with('success', '生徒が削除されました。');
+    }
 }

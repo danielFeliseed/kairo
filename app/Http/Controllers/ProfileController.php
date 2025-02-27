@@ -24,6 +24,11 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function studentEdit(Request $request): Response
+    {
+        return Inertia::render('Profile/Student/Edit');
+    }
+    
     /**
      * Update the user's profile information.
      */
@@ -40,6 +45,19 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit');
     }
 
+    public function studentUpdate(Request $request)
+    {
+        // Let's validate directly in the controller for now
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'profile_color' => ['required', 'string', 'max:20'],
+        ]);
+                
+        $request->user()->fill($validated);
+        $request->user()->save();
+
+        return Redirect::route('profile.student.edit');
+    }
     /**
      * Delete the user's account.
      */

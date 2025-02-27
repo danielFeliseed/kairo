@@ -147,9 +147,6 @@ export default function AuthenticatedLayout({ header, children }) {
                                             </div>
                                             <div className={`ml-2`}>
                                                 <span className="text-sm font-medium">{user.name}</span>
-                                                <span className={`block text-xs`}>
-                                                    {user.role === 'student' ? 'がくせい' : 'せんせい'}
-                                                </span>
                                             </div>
                                         </button>
                                     </Dropdown.Trigger>
@@ -158,14 +155,26 @@ export default function AuthenticatedLayout({ header, children }) {
                                         contentClasses={`bg-white rounded-md shadow-lg py-1`}
                                         width="48"
                                     >
-                                        <Dropdown.Link 
-                                            href={route('profile.edit')}
-                                            className={`flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100`}
-                                        >
-                                            <User className="mr-2 h-4 w-4" />
-                                            プロフィール
-                                        </Dropdown.Link>
-                                        
+                                        {isStudent && (
+                                            <Dropdown.Link 
+                                                href={route('profile.student.edit')}
+                                                className={`flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100`}
+                                            >
+                                                <User className="mr-2 h-4 w-4" />
+                                                プロフィール
+                                            </Dropdown.Link>
+                                        )}
+
+                                        {isTeacher && ( 
+                                            <Dropdown.Link 
+                                                href={route('profile.edit')}
+                                                className={`flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100`}
+                                            >
+                                                <User className="mr-2 h-4 w-4" />
+                                                プロフィール
+                                            </Dropdown.Link>
+                                        )}
+
                                         {isStudent && (
                                             <Dropdown.Link 
                                                 href="/family/profiles"

@@ -144,13 +144,15 @@ class User extends Authenticatable
             ];
             
             // Pick a consistent color based on user ID
-            $value = $colors[$this->id % count($colors)];
-            
-            // Save it for next time
-            $this->profile_color = $value;
-            $this->save();
+            return $colors[$this->id % count($colors)];
         }
         
         return $value;
+    }
+
+    // Add this method to properly handle saving the color
+    public function setProfileColorAttribute($value)
+    {
+        $this->attributes['profile_color'] = $value;
     }
 }

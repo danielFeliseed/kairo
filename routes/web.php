@@ -8,6 +8,7 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudentProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,9 +43,12 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/homework/{id}', [HomeworkController::class, 'destroy'])->name('homework.destroy');
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
     Route::post('/student', [StudentController::class, 'store'])->name('student.store');
+    Route::delete('/student/{user}', [StudentController::class, 'destroy'])->name('student.destroy');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile/student', [ProfileController::class, 'studentEdit'])->name('profile.student.edit');
+    Route::patch('/profile/student', [ProfileController::class, 'studentUpdate'])->name('profile.student.update');
 });
 
 Route::get('/debug-media/{id}', function ($id) {

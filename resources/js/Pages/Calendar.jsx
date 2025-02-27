@@ -9,13 +9,13 @@ import { Button } from '@/Components/ui/button';
 import { ChevronLeft, ChevronRight, Star, Calendar as CalendarIcon, CheckCircle2 } from 'lucide-react';
 import 'react-calendar/dist/Calendar.css';
 
-export default function HomeworkCalendar({ auth, submissionDates }) {
+export default function HomeworkCalendar({ auth, submissionDates, currentStreak, longestStreak }) {
     const [value, setValue] = useState(new Date());
     const [activeStartDate, setActiveStartDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(null);
     const [streakInfo, setStreakInfo] = useState({
-        currentStreak: 0,
-        longestStreak: 0
+        currentStreak: currentStreak,
+        longestStreak: longestStreak
     });
 
     // Parse the submission dates from strings to Date objects
