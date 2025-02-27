@@ -213,7 +213,6 @@ export default function TeacherDashboard({
                                 <CardContent>
                                     <ScrollArea className="h-72">
                                         <div className="space-y-4">
-                                            
                                             {students?.map((student) => (
                                                 <div
                                                     key={student.id}
@@ -234,13 +233,19 @@ export default function TeacherDashboard({
                                                         </Avatar>
                                                         <div>
                                                             <div className="font-medium">
-                                                                {student.name} {student.family?.name}
+                                                                {student.name} (
+                                                                {
+                                                                    student
+                                                                        .family
+                                                                        ?.name
+                                                                }
+                                                                )
                                                             </div>
                                                             <div className="flex items-center text-sm text-gray-500 gap-1">
                                                                 <Award className="h-3 w-3" />{" "}
-                                                                {
-                                                                    student.currentStreak
-                                                                }
+                                                                {student?.streak
+                                                                    ?.current_streak ||
+                                                                    0}
                                                                 日連続
                                                             </div>
                                                         </div>
