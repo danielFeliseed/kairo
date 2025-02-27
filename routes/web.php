@@ -8,8 +8,6 @@ use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\FamilyController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\StudentController;
-use App\Http\Controllers\StudentProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -32,23 +30,37 @@ Route::get('/family/login/{student}', [FamilyController::class, 'loginAsStudent'
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/teacher-dashboard', [TeacherDashboardController::class, 'index'])
-        ->middleware(['auth', 'verified'])
-        ->name('teacher-dashboard');
-    Route::get('/homework', [HomeworkController::class, 'index'])->name('homework.index');
-    Route::get('/homework/{id}', [HomeworkController::class, 'show'])->name('homework.show');
     Route::post('/homework', [HomeworkController::class, 'store'])->name('homework.store');
-    Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
     Route::get('/homework-history', [HomeworkController::class, 'history'])->name('homework.history');
     Route::delete('/homework/{id}', [HomeworkController::class, 'destroy'])->name('homework.destroy');
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
-    Route::post('/student', [StudentController::class, 'store'])->name('student.store');
-    Route::delete('/student/{user}', [StudentController::class, 'destroy'])->name('student.destroy');
+    
+    Route::get('/profile/student', [ProfileController::class, 'studentEdit'])->name('profile.student.edit');
+    Route::patch('/profile/student', [ProfileController::class, 'studentUpdate'])->name('profile.student.update');
+});
+
+Route::middleware(['auth', 'teacher'])->group(function () {
+    Route::get('/teacher-dashboard', [TeacherDashboardController::class, 'index'])
+        ->name('teacher-dashboard');
+    Route::post('/student', [StudentController::class, 'store'])
+        ->name('student.store');
+    Route::delete('/student/{user}', [StudentController::class, 'destroy'])
+        ->name('student.destroy');
+    Route::get('/families/create', [FamilyController::class, 'create'])
+        ->name('families.create');
+    Route::post('/families', [FamilyController::class, 'store'])
+        ->name('families.store');
+    Route::get('/families/{family}', [FamilyController::class, 'show'])
+        ->name('families.show');
+    Route::get('/homework', [HomeworkController::class, 'index'])->name('homework.index');
+    Route::get('/homework/{id}', [HomeworkController::class, 'show'])->name('homework.show');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/profile/student', [ProfileController::class, 'studentEdit'])->name('profile.student.edit');
-    Route::patch('/profile/student', [ProfileController::class, 'studentUpdate'])->name('profile.student.update');
+});
+
+Route::middleware(['auth', 'teacher'])->group(function () {
+    Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 });
 
 Route::get('/debug-media/{id}', function ($id) {
