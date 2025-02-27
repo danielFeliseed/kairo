@@ -32,10 +32,13 @@ export default function TeacherDashboard({
     students,
     recentHomework,
     families,
+    streaks,
 }) {
     const { delete: destroy } = useForm();
     const [showAddStudentModal, setShowAddStudentModal] = useState(false);
     const totalStudents = students?.length;
+
+    console.log(students);
 
     const handleDelete = (id) => {
         if (confirm("本当に削除しますか？")) {
@@ -210,6 +213,7 @@ export default function TeacherDashboard({
                                 <CardContent>
                                     <ScrollArea className="h-72">
                                         <div className="space-y-4">
+                                            
                                             {students?.map((student) => (
                                                 <div
                                                     key={student.id}
@@ -230,7 +234,7 @@ export default function TeacherDashboard({
                                                         </Avatar>
                                                         <div>
                                                             <div className="font-medium">
-                                                                {student.name}
+                                                                {student.name} {student.family?.name}
                                                             </div>
                                                             <div className="flex items-center text-sm text-gray-500 gap-1">
                                                                 <Award className="h-3 w-3" />{" "}

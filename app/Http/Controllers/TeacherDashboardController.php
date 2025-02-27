@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Homework;
 use Inertia\Inertia;
 
@@ -10,7 +11,7 @@ class TeacherDashboardController extends Controller
 {
     public function index()
     {
-        $teacher = auth()->user();
+        $teacher = Auth::user();
         $students = $teacher->students;
         $families = $teacher->managedFamilies;
         $recentHomework = Homework::whereIn('student_id', $students->pluck('id'))
