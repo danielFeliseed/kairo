@@ -47,6 +47,8 @@ export default function StudentDashboard({
 }) {
     const hasTodaysHomework = hasSubmittedToday;
 
+    console.log(user);
+
     const [capturedImage, setCapturedImage] = useState(null);
     const [isCameraActive, setIsCameraActive] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -139,6 +141,8 @@ export default function StudentDashboard({
         });
     };
 
+    const teacherName = user.teacher ? user.teacher.name : "先生";
+
     return (
         <AuthenticatedLayout
             header={
@@ -161,7 +165,7 @@ export default function StudentDashboard({
                                     こんにちは、{user.name}さん！
                                 </h1>
                                 <p className="text-blue-600">
-                                    今日も英語をがんばろう！
+                                    {teacherName}と一緒に今日も英語をがんばろう！
                                 </p>
                             </div>
                         </div>
@@ -190,7 +194,7 @@ export default function StudentDashboard({
                                         </span>
                                     </div>
                                     <p className="text-sm text-gray-500">
-                                        先生からのコメントをまっているよ
+                                        {teacherName}先生からのコメントをまっているよ
                                     </p>
                                 </div>
                             ) : (
@@ -292,7 +296,7 @@ export default function StudentDashboard({
                         <CardHeader className="pb-2 bg-gradient-to-r from-purple-50 to-pink-50">
                             <CardTitle className="flex items-center gap-2">
                                 <MessageSquare size={20} className="text-purple-500" />
-                                <span>先生からのメッセージ</span>
+                                <span>{teacherName}からのメッセージ</span>
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="pt-4">

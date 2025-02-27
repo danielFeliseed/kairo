@@ -1,14 +1,15 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/Components/ui/card";
+import { Badge } from "@/Components/ui/badge";
 import { format } from "date-fns";
 import { ja } from "date-fns/locale";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Button } from "@/components/ui/button";
-import { Trash2, X, Maximize, FileText, CheckCircle, Clock, Star } from "lucide-react";
+import { Button } from "@/Components/ui/button";
+import { Trash2, X, Maximize, FileText, MessageSquare, Calendar, Star, CheckCircle } from "lucide-react";
 import { useForm } from "@inertiajs/react";
 import { useState } from "react";
+import { Head } from "@inertiajs/react";
 
-export default function HomeworkHistory({ homework }) {
+export default function HomeworkHistory({ auth, homework }) {
     const { delete: destroy } = useForm();
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -24,92 +25,100 @@ export default function HomeworkHistory({ homework }) {
         setIsFullscreen(true);
     };
 
-    const getStatusIcon = (status) => {
-        switch(status) {
-            case "Completed": return <CheckCircle className="h-4 w-4 mr-1" />;
-            case "Pending": return <Clock className="h-4 w-4 mr-1" />;
-            default: return <Star className="h-4 w-4 mr-1" />;
-        }
-    };
-
-    const getStatusText = (status) => {
-        switch(status) {
-            case "Completed": return "おわった！";
-            case "Pending": return "まだだよ";
-            default: return status;
-        }
-    };
-
     return (
-        <>
-            <AuthenticatedLayout
-                header={
-                    <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                        おうちでやる勉強のきろく
-                    </h2>
-                }
-            >
-                <div className="max-w-3xl mx-auto p-4 sm:p-6">
-                    <div className="bg-blue-50 p-4 rounded-lg mb-6 border-2 border-blue-200">
-                        <h1 className="text-2xl font-bold text-blue-700 mb-2 flex items-center">
-                            <Star className="h-6 w-6 mr-2 text-yellow-500" />
-                            おうちでやった勉強のきろく
-                        </h1>
-                        <p className="text-blue-600">ここでは、おうちでやった勉強がぜんぶ見られるよ！</p>
+        <AuthenticatedLayout
+            header={
+                <h2 className="text-xl font-semibold leading-tight text-blue-700 flex items-center">
+                    <Calendar className="h-5 w-5 mr-2 text-blue-500" />
+                    べんきょうのきろく
+                </h2>
+            }
+        >
+            <Head title="べんきょうのきろく" />
+
+            <div className="py-6 bg-gradient-to-b from-blue-50 to-white">
+                <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+                    
+                    {/* Welcome Banner */}
+                    <div className="mb-6 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-xl p-4 border-2 border-indigo-200 shadow-sm">
+                        <div className="flex items-center">
+                            <Star className="h-8 w-8 text-yellow-500 mr-3" />
+                            <div>
+                                <h1 className="text-xl font-bold text-indigo-700">
+                                    べんきょうのきろく
+                                </h1>
+                                <p className="text-indigo-600">
+                                    これまでにがんばったべんきょうがぜんぶみれるよ！
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
-                    {homework.length === 0 ? (
-                        <div className="text-center p-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
-                            <FileText className="h-16 w-16 mx-auto mb-4 text-gray-300" />
-                            <p className="text-lg text-gray-500">まだ勉強のきろくがないよ</p>
-                        </div>
-                    ) : (
-                        <div className="space-y-4">
+                    {homework.length > 0 ? (
+                        <div className="space-y-6">
                             {homework.map((item) => (
-                                <Card key={item.id} className="overflow-hidden border-2 hover:shadow-lg transition-shadow duration-200">
-                                    <CardHeader className="flex flex-row items-center justify-between bg-gradient-to-r from-blue-50 to-purple-50 pb-2">
-                                        <CardTitle className="text-lg font-bold text-blue-700">
-                                            {format(
-                                                new Date(item.homework_date),
-                                                "M月d日（EEEE）HH:mm",
-                                                { locale: ja }
-                                            )}
-                                        </CardTitle>
-                                        <Button 
-                                            variant="outline" 
-                                            size="icon" 
-                                            onClick={() => handleDelete(item.id)}
-                                            className="h-8 w-8 rounded-full bg-white hover:bg-red-50 hover:text-red-500"
-                                        >
-                                            <Trash2 className="w-4 h-4" />
-                                        </Button>
+                                <Card 
+                                    key={item.id} 
+                                    className="overflow-hidden border-2 border-blue-100 shadow-md transition-all hover:shadow-lg"
+                                >
+                                    <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 pb-3">
+                                        <div className="flex justify-between items-center">
+                                            <div className="flex items-center">
+                                                <Calendar className="h-5 w-5 text-blue-500 mr-2" />
+                                                <CardTitle className="text-lg text-blue-700">
+                                                    {format(
+                                                        new Date(item.homework_date),
+                                                        "yyyy年MM月dd日 (EEEE)",
+                                                        { locale: ja }
+                                                    )}
+                                                </CardTitle>
+                                            </div>
+                                            <Button 
+                                                variant="ghost" 
+                                                size="icon" 
+                                                className="text-red-400 hover:text-red-600 hover:bg-red-50"
+                                                onClick={() => handleDelete(item.id)}
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </Button>
+                                        </div>
+                                        <div className="mt-2">
+                                            <Badge
+                                                className={`${
+                                                    item.status === "Completed"
+                                                        ? "bg-green-100 text-green-700 border border-green-300"
+                                                        : item.status === "Pending"
+                                                        ? "bg-yellow-100 text-yellow-700 border border-yellow-300"
+                                                        : "bg-gray-100 text-gray-700 border border-gray-300"
+                                                } px-3 py-1 rounded-full text-sm font-medium`}
+                                            >
+                                                {item.status === "Completed" ? (
+                                                    <span className="flex items-center">
+                                                        <CheckCircle className="w-3 h-3 mr-1" />
+                                                        おわった！
+                                                    </span>
+                                                ) : item.status === "Pending" ? (
+                                                    "まだだよ"
+                                                ) : (
+                                                    item.status
+                                                )}
+                                            </Badge>
+                                        </div>
                                     </CardHeader>
-                                    <CardContent className="pt-4">
-                                        <Badge
-                                            className={`${
-                                                item.status === "Completed"
-                                                    ? "bg-green-500"
-                                                    : item.status === "Pending"
-                                                    ? "bg-amber-500"
-                                                    : "bg-gray-500"
-                                            } text-white px-3 py-1 rounded-full mb-4 flex items-center w-fit text-sm`}
-                                        >
-                                            {getStatusIcon(item.status)}
-                                            {getStatusText(item.status)}
-                                        </Badge>
-                                        
-                                        <div className="relative mt-2 rounded-lg overflow-hidden border bg-gray-50">
+                                    
+                                    <CardContent className="p-4">
+                                        <div className="relative rounded-lg overflow-hidden bg-gray-50 border border-gray-100">
                                             {item.imageUrl ? (
                                                 <div className="relative">
                                                     <img 
                                                         src={item.imageUrl} 
-                                                        alt="勉強のきろく" 
-                                                        className="w-full h-48 object-contain bg-white p-2" 
+                                                        alt="べんきょうのきろく" 
+                                                        className="w-full object-contain max-h-[300px]" 
                                                     />
                                                     <Button 
                                                         variant="secondary" 
                                                         size="sm"
-                                                        className="absolute bottom-2 right-2 bg-white/80 hover:bg-white shadow-md rounded-full"
+                                                        className="absolute bottom-3 right-3 bg-white/70 hover:bg-white/90 shadow-md rounded-full"
                                                         onClick={() => openFullscreen(item.imageUrl)}
                                                     >
                                                         <Maximize className="h-4 w-4 mr-1" />
@@ -119,48 +128,62 @@ export default function HomeworkHistory({ homework }) {
                                             ) : (
                                                 <div className="text-center py-12 text-gray-400">
                                                     <FileText className="h-12 w-12 mx-auto mb-2 opacity-30" />
-                                                    <p>写真がないよ</p>
+                                                    <p>写真がありません</p>
                                                 </div>
                                             )}
                                         </div>
-
+                                        
                                         {item.feedback && (
-                                            <div className="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                                                <h3 className="font-bold text-yellow-700 mb-1 flex items-center">
-                                                    <Star className="h-4 w-4 mr-1 text-yellow-500" />
-                                                    先生からのメッセージ
-                                                </h3>
-                                                <p className="text-gray-700">
-                                                    {item.feedback.feedback_text}
-                                                </p>
+                                            <div className="mt-4 bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                                                <div className="flex items-start">
+                                                    <MessageSquare className="h-5 w-5 text-yellow-600 mr-2 mt-0.5" />
+                                                    <div>
+                                                        <h4 className="font-medium text-yellow-700 mb-1">先生からのメッセージ</h4>
+                                                        <p className="text-gray-700">
+                                                            {item.feedback.feedback_text}
+                                                        </p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         )}
                                     </CardContent>
                                 </Card>
                             ))}
                         </div>
+                    ) : (
+                        <div className="text-center py-12 bg-white rounded-xl border-2 border-blue-100 shadow-sm">
+                            <FileText className="h-16 w-16 mx-auto mb-4 text-blue-200" />
+                            <h3 className="text-xl font-medium text-gray-700 mb-2">まだべんきょうのきろくがないよ</h3>
+                            <p className="text-gray-500 mb-6">はじめての宿題をだしてみよう！</p>
+                            <Button 
+                                onClick={() => window.location.href = route('dashboard')}
+                                className="bg-blue-500 hover:bg-blue-600"
+                            >
+                                ホームにもどる
+                            </Button>
+                        </div>
                     )}
                 </div>
+            </div>
 
-                {/* Image Fullscreen View */}
-                {isFullscreen && selectedImage && (
-                    <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
-                        <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className="absolute top-4 right-4 text-white hover:bg-white/20" 
-                            onClick={() => setIsFullscreen(false)}
-                        >
-                            <X className="h-6 w-6" />
-                        </Button>
-                        <img 
-                            src={selectedImage} 
-                            alt="勉強のきろく" 
-                            className="max-h-[90vh] max-w-[90vw] object-contain" 
-                        />
-                    </div>
-                )}
-            </AuthenticatedLayout>
-        </>
+            {/* Image Fullscreen View */}
+            {isFullscreen && selectedImage && (
+                <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
+                    <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="absolute top-4 right-4 text-white hover:bg-white/20" 
+                        onClick={() => setIsFullscreen(false)}
+                    >
+                        <X className="h-6 w-6" />
+                    </Button>
+                    <img 
+                        src={selectedImage} 
+                        alt="べんきょうのきろく" 
+                        className="max-h-[90vh] max-w-[90vw] object-contain" 
+                    />
+                </div>
+            )}
+        </AuthenticatedLayout>
     );
 }
