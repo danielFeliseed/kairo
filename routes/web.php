@@ -42,6 +42,7 @@ Route::post('/homework', [HomeworkController::class, 'store'])->name('homework.s
 Route::post('/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
 
 Route::get('/homework-history', [HomeworkController::class, 'history'])->name('homework.history');
+Route::delete('/homework/{id}', [HomeworkController::class, 'destroy'])->name('homework.destroy');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

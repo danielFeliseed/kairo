@@ -26,6 +26,14 @@ class HomeworkController extends Controller
             ->where('student_id', Auth::user()->id)
             ->orderBy('homework_date', 'desc')
             ->get();
+
+        $homework = $homework->map(function($item) {
+            $item->imageUrl = $item->hasMedia('diary_images') 
+            ? route('homework.image', $item->id) 
+            : null;
+        return $item;
+        });
+
         return Inertia::render('HomeworkHistory', [
             'homework' => $homework,
         ]);
@@ -83,5 +91,12 @@ class HomeworkController extends Controller
             'homework' => $homework,
             'imageUrl' => $imageUrl,
         ]);
+    }
+
+    public function destroy($id)
+    {
+        $homework = Homework::findOrFail($id);
+        $homework->delete();
+        return redirect()->route('homework.history')->with('success', '宿題を削除しました');
     }
 }
