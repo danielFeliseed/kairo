@@ -19,6 +19,6 @@ class CalendarController extends Controller
             return $date->format('Y-m-d');
         });
 
-        return Inertia::render('Calendar', ['submissionDates' => $submissionDates, 'currentStreak' => $streak->getCurrentStreak(), 'longestStreak' => $streak->getLongestStreak()]);
+        return Inertia::render('Calendar', ['submissionDates' => $submissionDates ?? [], 'currentStreak' => $streak->getCurrentStreak() ?? 0, 'longestStreak' => $streak->getLongestStreak() ?? 0]);
     }
 }
